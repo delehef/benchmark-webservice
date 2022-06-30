@@ -4,11 +4,11 @@ usage(){
     cat << EOF
 $0 - run Enzyme Classification (EC) benchmark
 
-Compute benchmark results for the Enzyme Classification benchmark for a single 
-orthology method. You can specify the reference dataset and similarity measure 
+Compute benchmark results for the Enzyme Classification benchmark for a single
+orthology method. You can specify the reference dataset and similarity measure
 using the below options
 
-Options 
+Options
 
   -m    similarity measure. Can be one of 'avg Sim', 'max Sim', 'avg Info',
         'max Info' or 'avg Schlicker'
@@ -24,7 +24,7 @@ Options
 
 Positional arguments:
   project_db   Path to project database
-  
+
   title        Name of the project
 
   refset       Path to refset data
@@ -82,7 +82,7 @@ if [[ -z "$out_dir"  ]]; then
 fi
 if [ ! -d "$out_dir" ] ; then mkdir -p "$out_dir"; echo "created $out_dir"; fi
 
-darwin -E  << EOF
+darwin -S $benchmark_dir/lib/darwinit -E  << EOF
    project_db := '$project_db':
    measure := '$measure':
    title := '$title':

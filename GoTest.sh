@@ -4,17 +4,17 @@ usage(){
     cat << EOF
 $0 - run Gene Ontology benchmark
 
-Compute benchmark results for the Gene Ontology benchmark for a single 
+Compute benchmark results for the Gene Ontology benchmark for a single
 orthology method. You can specify the reference dataset, evidence filters
 and similarity measure using the below options
 
-Options 
+Options
 
   -m    similarity measure. Can be one of 'avg Sim', 'max Sim', 'avg Info',
         'max Info' or 'avg Schlicker'
 
-  -e    evidence filter for GO annotations to be considered in benchmark. The 
-        value can either be a list of evidences, e.g. "[IPI,IEA,IDA]" or one 
+  -e    evidence filter for GO annotations to be considered in benchmark. The
+        value can either be a list of evidences, e.g. "[IPI,IEA,IDA]" or one
         of the three following evidence shortcuts:
           - exp: all non-highthroughput experimental evidence codes, i.e.
                  EXP, IDA, IPI, IMP, IGI, IEP
@@ -36,7 +36,7 @@ Options
 
 Positional arguments:
   project_db   Path to project database
-  
+
   title        Name of the project
 
   refset       Path to refset data
@@ -105,7 +105,7 @@ if [[ -z "$out_dir"  ]]; then
 fi
 if [ ! -d "$out_dir" ] ; then mkdir -p "$out_dir"; echo "created $out_dir"; fi
 
-darwin -E  << EOF
+darwin -S $benchmark_dir/lib/darwinit -E  << EOF
    project_db := '$project_db':
    measure := '$measure':
    evidences := $evidences:

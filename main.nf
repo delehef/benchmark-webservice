@@ -45,7 +45,7 @@ if (params.help) {
 
     Flags:
         --help                  Display this message¬
-        --cpy_sqlite_db         Store the sqlite3 database with the pairwise prediction in the folder specified 
+        --cpy_sqlite_db         Store the sqlite3 database with the pairwise prediction in the folder specified
                                 with --otherdir parameter (${param.otherdir})
     """.stripIndent()
 
@@ -81,8 +81,8 @@ benchmarks = params.challenges_ids
 community_id = params.community_id
 benchmark_data = file(params.assess_dir)
 go_evidences = params.go_evidences
-tree_clades = Channel.from("Luca", "Vertebrata", "Fungi", "Eukaryota")
-tree_clades2 = Channel.from("Luca", "Vertebrata", "Fungi", "Eukaryota")
+tree_clades = Channel.from("Luca", "Vertebrata", "Eukaryota")
+tree_clades2 = Channel.from("Luca", "Vertebrata", "Eukaryota")
 genetree_sets = Channel.from("SwissTrees", "TreeFam-A")
 tree_clades0 = Channel.from("Eukaryota", "Fungi", "Bacteria")
 
@@ -98,7 +98,7 @@ otherdir = file(params.otherdir)
  * validate input file
  */
 process validate_input_file {
-    label "py"
+    container 'qfobenchmark/python:latest'
 
     input:
     file predictions
@@ -120,8 +120,7 @@ process validate_input_file {
  * extract pairwise predictions and store in darwin compatible database
  */
 process convertPredictions {
-
-    label "py"
+    container 'qfobenchmark/python:latest'
     publishDir path: "$otherdir", saveAs: {file -> (file == 'orthologs.db') ? "${method_name}.db" : null}, mode: "copy", enabled: params.cpy_sqlite_db
 
     input:
@@ -144,8 +143,7 @@ process convertPredictions {
 
 
 process go_benchmark {
-
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
 
     input:
     file db from db
@@ -154,7 +152,7 @@ process go_benchmark {
     val go_evidences
     val community_id
     val result_file_path
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -169,8 +167,7 @@ process go_benchmark {
 }
 
 process ec_benchmark {
-
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
 
     input:
     file db from db
@@ -178,7 +175,7 @@ process ec_benchmark {
     val refset_dir
     val community_id
     val result_file_path
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -195,7 +192,7 @@ process ec_benchmark {
 }
 
 process swissprot_benchmark {
-    label "py"
+    container 'qfobenchmark/python:latest'
 
     input:
     file sqlite_db from sqlite_db
@@ -228,7 +225,7 @@ process swissprot_benchmark {
 
 
 process vgnc_benchmark {
-    label "py"
+    container 'qfobenchmark/python:latest'
 
     input:
     file sqlite_db from sqlite_db
@@ -257,8 +254,7 @@ process vgnc_benchmark {
 }
 
 process speciestree_benchmark {
-
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
     tag "$clade"
 
     input:
@@ -268,7 +264,7 @@ process speciestree_benchmark {
     val clade from tree_clades0
     val community_id
     val result_file_path
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -285,8 +281,7 @@ process speciestree_benchmark {
 
 
 process g_speciestree_benchmark {
-
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
     tag "$clade"
 
     input:
@@ -296,7 +291,7 @@ process g_speciestree_benchmark {
     val clade from tree_clades
     val community_id
     val result_file_path
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -312,7 +307,7 @@ process g_speciestree_benchmark {
 }
 
 process g_speciestree_benchmark_variant2 {
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
     tag "$clade"
 
     input:
@@ -322,7 +317,7 @@ process g_speciestree_benchmark_variant2 {
     val community_id
     val result_file_path
     val clade from tree_clades2
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -339,7 +334,7 @@ process g_speciestree_benchmark_variant2 {
 
 
 process reference_genetrees_benchmark {
-    label "darwin"
+    container "qfobenchmark/darwin:latest"
     tag "$testset"
 
     input:
@@ -349,7 +344,7 @@ process reference_genetrees_benchmark {
     val testset from genetree_sets
     val community_id
     val result_file_path
-    // for mountpoint 
+    // for mountpoint
     file predictions
 
     output:
@@ -368,7 +363,7 @@ process reference_genetrees_benchmark {
 challenge_assessments = GO_STUB.mix(EC_STUB, SP_STUB, STD_STUB, G_STD_STUB, G_STD2_STUB, REFPHYLO_STUB, VGNC_STUB)
 
 process consolidate {
-    label "py"
+    container 'qfobenchmark/python:latest'
 
     input:
     file participants from PARTICIPANT_STUB.collect()
@@ -389,5 +384,5 @@ process consolidate {
 
 
 workflow.onComplete {
-	println ( workflow.success ? "Done!" : "Oops .. something went wrong" )
+    println ( workflow.success ? "Done!" : "Oops .. something went wrong" )
 }

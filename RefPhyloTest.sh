@@ -8,7 +8,7 @@ Compute benchmark results for the Reference Phylogeny benchmark for a
 single orthology method. You can specify the reference dataset and the
 testset using the below options
 
-Options 
+Options
   -t    testset, currently accepted are either SwissTree or TreeFam-A.
 
   -o    output directory, where raw data file will be stored.
@@ -23,7 +23,7 @@ Options
 
 Positional arguments:
   project_db   Path to project database
-  
+
   title        Name of the project
 
   refset       Path to refset data
@@ -80,7 +80,7 @@ if [[ -z "$out_dir" || -z "$assessment_fname" ]]; then
 fi
 if [ ! -d "$out_dir" ] ; then mkdir -p "$out_dir"; echo "created $out_dir"; fi
 
-darwin -E << EOF
+darwin -S $benchmark_dir/lib/darwinit -E << EOF
    project_db := '$project_db':
    testset := '$testset':
    title := '$title':

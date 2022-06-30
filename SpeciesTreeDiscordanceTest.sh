@@ -109,7 +109,7 @@ if [[ -z "$out_dir" || -z "$assessment_fname" ]]; then
 fi
 if [ ! -d "$out_dir" ] ; then mkdir -p "$out_dir"; echo "created $out_dir"; fi
 
-darwin -E  << EOF
+darwin -S $benchmark_dir/lib/darwinit -E  << EOF
    project_db := '$project_db';
    problem := '$problem';
    confidence := $confidence;
